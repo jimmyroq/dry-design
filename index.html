@@ -12,7 +12,8 @@
   <meta property="og:description" content="Design & AI consultancy based in Stockholm.">
   <meta property="og:image" content="https://dry.design/og-image.png">
   <meta property="og:url" content="https://dry.design">
-  <meta name="theme-color" content="#0a0a0a">
+  <meta name="theme-color" content="#f2eeea" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
@@ -20,10 +21,19 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #0a0a0a;
-      --text: #ffffff;
-      --muted: #888888;
-      --accent: #e8e8e8;
+      --bg: #f2eeea;
+      --text: #4a4440;
+      --muted: #7a7470;
+      --accent: #4a4440;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0a0a0a;
+        --text: #ffffff;
+        --muted: #888888;
+        --accent: #e8e8e8;
+      }
     }
 
     body {
@@ -73,9 +83,18 @@
       color: var(--muted);
     }
 
+    @media (prefers-color-scheme: light) {
+      h1 {
+        color: var(--muted);
+      }
+      h1 .thin {
+        color: var(--text);
+      }
+    }
+
     .tagline {
       font-size: clamp(1rem, 2.5vw, 1.25rem);
-      color: var(--muted);
+      color: var(--text);
       line-height: 1.6;
       max-width: 480px;
     }
