@@ -39,6 +39,7 @@
     body {
       font-family: 'Inter', -apple-system, sans-serif;
       background: var(--bg);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cpath d='M32 0H0v32' fill='none' stroke='%23ffffff' stroke-width='0.5'/%3E%3C/svg%3E");
       color: var(--text);
       min-height: 100vh;
       display: flex;
@@ -52,6 +53,12 @@
       body {
         justify-content: flex-start;
         padding-top: 3rem;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-image: none;
       }
     }
 
@@ -69,6 +76,12 @@
       height: auto;
       margin-left: -4px;
       margin-bottom: 4.8rem;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .logo {
+        filter: drop-shadow(0 0 2px rgba(235, 103, 57, 0.5)) drop-shadow(0 0 2px rgba(134, 56, 91, 0.5));
+      }
     }
 
     h1 {
