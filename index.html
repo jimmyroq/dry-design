@@ -116,6 +116,20 @@
       color: var(--muted);
     }
 
+    h1 .cursor {
+      display: inline-block;
+      width: 0.45em;
+      height: 7px;
+      background: var(--muted);
+      margin-left: 0.08em;
+      vertical-align: -0.08em;
+      animation: blink 1.2s step-end infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
     @media (prefers-color-scheme: light) {
       h1 {
         color: var(--muted);
@@ -184,7 +198,7 @@
       <source srcset="logo.svg" type="image/svg+xml">
       <img src="logo.png" alt="DRY" class="logo">
     </picture>
-    <h1><span class="line">Don't </span><span class="line">Repeat </span><span class="thin line">Yourself.</span></h1>
+    <h1><span class="line">Don't </span><span class="line">Repeat </span><span class="thin line">Yourself.<span class="cursor"></span></span></h1>
     <p class="tagline">
       We're pragmatic designers. We take ownership of the full experience – not just the pixels. We think critically, communicate proactively, and invest in our craft every&nbsp;day.
     </p>
