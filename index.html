@@ -56,7 +56,7 @@
     }
 
     .container {
-      max-width: 720px;
+      max-width: 1080px;
       margin: 0 auto;
       width: 100%;
       display: flex;
@@ -79,6 +79,25 @@
       margin-bottom: 2rem;
     }
 
+    h1 .line {
+      display: block;
+    }
+
+    @media (min-width: 800px) {
+      h1 .line {
+        display: inline;
+      }
+      h1 {
+        font-size: 4.5rem;
+      }
+    }
+
+    @media (min-width: 1050px) {
+      h1 {
+        font-size: 6rem;
+      }
+    }
+
     h1 .thin {
       color: var(--muted);
     }
@@ -96,7 +115,8 @@
       font-size: clamp(1rem, 2.5vw, 1.25rem);
       color: var(--text);
       line-height: 1.6;
-      max-width: 480px;
+      max-width: 800px;
+      margin-bottom: 1.5rem;
     }
 
     .divider {
@@ -125,6 +145,19 @@
       color: var(--text);
     }
 
+    .footer .cta-email {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 700;
+      color: var(--text);
+      display: block;
+      margin-bottom: 0.75rem;
+    }
+
+    .footer .cta-email:hover {
+      color: #EB6739;
+    }
+
     .footer .address {
       color: var(--muted);
       font-size: 0.9rem;
@@ -134,13 +167,21 @@
 <body>
   <div class="container">
     <img src="favicon.svg" alt="DRY" class="logo">
-    <h1>Don't<br>Repeat<br><span class="thin">Yourself.</span></h1>
+    <h1><span class="line">Don't </span><span class="line">Repeat </span><span class="thin line">Yourself.</span></h1>
     <p class="tagline">
-      Design & AI consultancy in Stockholm. We help companies build the right thing — and build it right the first time.
+      We're pragmatic designers. We take ownership of the full experience – not just the pixels. We think critically, communicate proactively, and invest in our craft every&nbsp;day.
+    </p>
+    <p class="tagline">
+      AI is woven into everything we do. Not as a gimmick, but as a multiplier – making us faster, sharper, and freeing us to focus on what actually matters: solving the right&nbsp;problems.
+    </p>
+    <p class="tagline">
+      We know when good enough is good enough. And when it's&nbsp;not.
+    </p>
+    <p class="tagline" style="margin-bottom: 0;">
+      Give us a&nbsp;try.
     </p>
     <div class="footer">
-      <div class="divider"></div>
-      <a href="mailto:try@dry.design">try@dry.design</a>
+      <a href="mailto:try@dry.design" class="cta-email">try@dry.design</a>
       <span class="address">Östgötagatan 45, 116 25 Stockholm</span>
     </div>
   </div>
