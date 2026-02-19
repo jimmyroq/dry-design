@@ -84,6 +84,12 @@
       to { opacity: 1; }
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      .logo {
+        animation: none;
+      }
+    }
+
     @media (max-width: 640px) {
       .logo {
         margin-bottom: 1rem;
@@ -139,7 +145,22 @@
     }
 
     @keyframes blink {
-      50% { opacity: 0; }
+      0% { opacity: 0; }
+      12% { opacity: 1; }
+      45% { opacity: 1; }
+      50% { opacity: 1; }
+      62% { opacity: 0; }
+      95% { opacity: 0; }
+      100% { opacity: 0; }
+    }
+
+    @keyframes charFade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .ch {
+      animation: charFade 0.15s ease-out forwards;
     }
 
     .tagline {
@@ -240,7 +261,7 @@
       <p>Give us a try.</p>
     </div>
     <!-- Visual typewriter (hidden from screen readers) -->
-    <h1 id="tw-h1" aria-hidden="true"></h1>
+    <h1 aria-hidden="true"><span class="line" id="tw-h1-l1"></span><span class="line" id="tw-h1-l2"></span><span class="line" id="tw-h1-l3"></span></h1>
     <p class="tagline" id="tw-p1" aria-hidden="true"></p>
     <p class="tagline" id="tw-p2" aria-hidden="true"></p>
     <p class="tagline" id="tw-p3" aria-hidden="true"></p>
@@ -256,8 +277,13 @@
     document.addEventListener('DOMContentLoaded', () => {
       const SPEED = 0.63; // 37% faster
       const cursor = document.getElementById('cursor');
+      // Split h1 into 3 line spans: "Don't " / "Repeat " / "Yourself."
+      const h1text = TYPING_DATA[0].t;  // "Don't Repeat Yourself."
+      const h1timings = TYPING_DATA[0].d;
       const segments = [
-        { el: document.getElementById('tw-h1'), text: TYPING_DATA[0].t, timings: TYPING_DATA[0].d, isH1: true },
+        { el: document.getElementById('tw-h1-l1'), text: h1text.slice(0,6), timings: h1timings.slice(0,6), isH1: true },
+        { el: document.getElementById('tw-h1-l2'), text: h1text.slice(6,13), timings: h1timings.slice(6,13), isH1: true },
+        { el: document.getElementById('tw-h1-l3'), text: h1text.slice(13), timings: h1timings.slice(13), isH1: true },
         { el: document.getElementById('tw-p1'), text: TYPING_DATA[1].t, timings: TYPING_DATA[1].d },
         { el: document.getElementById('tw-p2'), text: TYPING_DATA[2].t, timings: TYPING_DATA[2].d },
         { el: document.getElementById('tw-p3'), text: TYPING_DATA[3].t, timings: TYPING_DATA[3].d },
@@ -279,7 +305,7 @@
       }
 
       let seg = 0, ch = 0;
-      moveCursor(segments[0].el, true);
+      moveCursor(document.getElementById('tw-h1-l1'), true);
 
       function typeNext() {
         if (seg >= segments.length) return; // cursor stays, keeps blinking
@@ -287,7 +313,10 @@
         if (cursor.parentElement !== s.el) {
           moveCursor(s.el, !!s.isH1);
         }
-        s.el.insertBefore(document.createTextNode(s.text[ch]), cursor);
+        const span = document.createElement('span');
+        span.className = 'ch';
+        span.textContent = s.text[ch];
+        s.el.insertBefore(span, cursor);
         let delay = randDelay(s.timings[ch]);
         const typed = s.text[ch];
         ch++;
@@ -310,8 +339,8 @@
             cursor.className = 'in-body';
             return; // cursor keeps blinking via CSS
           }
-          // Paragraph break pause
-          const pause = (seg === 1) ? 1500 : randBetween(1200, 1700);
+          // Paragraph break pause — longer after h1→body
+          const pause = (seg === 3) ? 1500 : (seg < 3) ? Math.round(50 * SPEED) : randBetween(1200, 1700);
           setTimeout(typeNext, pause);
         } else {
           // Punctuation pauses
