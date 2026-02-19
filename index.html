@@ -337,9 +337,7 @@
             ? t.substring(0, lastSpace) + '\u00A0' + t.substring(lastSpace + 1)
             : t;
         });
-        // Place cursor after last segment
-        segments[segments.length - 1].el.appendChild(cursor);
-        cursor.className = 'in-body';
+        cursor.remove();
         return;
       }
       setTimeout(typeNext, 1500);
