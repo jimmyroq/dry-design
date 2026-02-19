@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Full Page Typing Recorder</title>
+  <style>
+    body { background: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; margin: 0; padding: 2rem; min-height: 100vh; }
+    h1 { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .instructions { color: #888; margin-bottom: 2rem; line-height: 1.6; }
+    .target { color: #555; font-size: 1rem; line-height: 1.8; margin-bottom: 1rem; padding: 1rem; border: 1px solid #333; border-radius: 8px; white-space: pre-wrap; }
+    .target .done { color: #EB6739; }
+    .target .current { color: #fff; text-decoration: underline; }
+    .target .remaining { color: #333; }
+    #stats { margin-top: 1rem; color: #888; font-size: 0.9rem; }
+    #output { margin-top: 2rem; background: #111; padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.8rem; color: #EB6739; max-height: 300px; overflow-y: auto; white-space: pre-wrap; display: none; }
+    .controls { margin-top: 1rem; display: flex; gap: 1rem; }
+    button { background: #EB6739; color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+    button:hover { background: #d4522a; }
+    .run-label { color: #888; font-size: 1.2rem; margin-bottom: 1rem; }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <h1>🎹 Typing Recorder</h1>
+  <div class="instructions">
+    Skriv texten nedan exakt som den står. Varje knapptryckning spelas in.<br>
+    Kör minst 3 gånger för bra data. Tryck <strong>Enter</strong> för nytt försök.
+  </div>
+  <div class="run-label">Run: <span id="runCount">1</span></div>
+  <div class="target" id="target"></div>
+  <div id="stats"></div>
+  <div class="controls">
+    <button onclick="exportData()">Exportera all data</button>
+    <button onclick="resetAll()">Nollställ allt</button>
+  </div>
+  <div id="output"></div>
+
+  <script>
+    const fullText = `Don't Repeat Yourself.
+
+We're pragmatic designers. We take ownership of the full experience – not just the pixels. We think critically, communicate proactively, and invest in our craft every day.
+
+AI is woven into everything we do. Not as a gimmick, but as a multiplier – making us faster, sharper, and freeing us to focus on what actually matters: solving the right problems.
+
+We know when good enough is good enough. And when it's not.
+
+Give us a try.`;
+
+    let pos = 0;
+    let lastTime = null;
+    let timings = []; // {char, delay, prevChar}
+    let allRuns = [];
+    let runCount = 1;
+
+    function render() {
+      const el = document.getElementById('target');
+      const done = fullText.slice(0, pos);
+      const current = pos < fullText.length ? fullText[pos] : '';
+      const remaining = fullText.slice(pos + 1);
+      
+      let currentDisplay = current === '\n' ? '↵\n' : current;
+      
+      el.innerHTML = 
+        '<span class="done">' + escHtml(done) + '</span>' +
+        '<span class="current">' + escHtml(currentDisplay) + '</span>' +
+        '<span class="remaining">' + escHtml(remaining) + '</span>';
+      
+      document.getElementById('stats').textContent = 
+        `${pos}/${fullText.length} tecken | ${timings.length} delays inspelade | ${allRuns.length} avslutade runs`;
+    }
+
+    function escHtml(s) {
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && pos >= fullText.length) {
+        // Spara run och börja om
+        allRuns.push([...timings]);
+        timings = [];
+        pos = 0;
+        lastTime = null;
+        runCount++;
+        document.getElementById('runCount').textContent = runCount;
+        render();
+        return;
+      }
+
+      if (pos >= fullText.length) return;
+
+      const expected = fullText[pos];
+      let key = e.key;
+      
+      // Map Enter to newline
+      if (key === 'Enter') key = '\n';
+      
+      if (key === expected) {
+        e.preventDefault();
+        const now = performance.now();
+        if (lastTime !== null) {
+          timings.push({
+            char: expected,
+            prevChar: pos > 0 ? fullText[pos-1] : null,
+            delay: Math.round(now - lastTime)
+          });
+        }
+        lastTime = now;
+        pos++;
+        render();
+        
+        if (pos >= fullText.length) {
+          document.getElementById('stats').textContent += ' ✅ Klart! Tryck Enter för nästa run.';
+        }
+      }
+    });
+
+    function exportData() {
+      // Include current run if has data
+      const runs = [...allRuns];
+      if (timings.length > 0) runs.push([...timings]);
+      
+      const output = document.getElementById('output');
+      output.style.display = 'block';
+      output.textContent = JSON.stringify(runs, null, 2);
+      
+      // Also copy to clipboard
+      navigator.clipboard.writeText(JSON.stringify(runs)).then(() => {
+        document.getElementById('stats').textContent += ' | Kopierat till clipboard!';
+      });
+    }
+
+    function resetAll() {
+      allRuns = [];
+      timings = [];
+      pos = 0;
+      lastTime = null;
+      runCount = 1;
+      document.getElementById('runCount').textContent = 1;
+      document.getElementById('output').style.display = 'none';
+      render();
+    }
+
+    render();
+  </script>
+</body>
+</html>
