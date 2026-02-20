@@ -334,10 +334,31 @@
           if (seg < segments.length) {
             moveCursor(segments[seg].el, !!segments[seg].isH1);
           } else {
-            // Done — put cursor back after last element's text
-            s.el.appendChild(cursor);
+            // Done — move cursor to its own empty line
+            const emptyLine = document.createElement('p');
+            emptyLine.className = 'tagline';
+            emptyLine.setAttribute('aria-hidden', 'true');
+            s.el.after(emptyLine);
+            emptyLine.appendChild(cursor);
             cursor.className = 'in-body';
-            return; // cursor keeps blinking via CSS
+            // Smooth scroll to bottom after 2s
+            setTimeout(() => {
+              const start = window.scrollY;
+              const end = document.body.scrollHeight - window.innerHeight;
+              const dist = end - start;
+              if (dist <= 0) return;
+              const duration = 1800;
+              const t0 = performance.now();
+              function step(now) {
+                const p = Math.min((now - t0) / duration, 1);
+                // ease-in-out cubic
+                const ease = p < 0.5 ? 4*p*p*p : 1 - Math.pow(-2*p+2, 3)/2;
+                window.scrollTo(0, start + dist * ease);
+                if (p < 1) requestAnimationFrame(step);
+              }
+              requestAnimationFrame(step);
+            }, 2000);
+            return;
           }
           // Paragraph break pause — longer after h1→body
           const pause = (seg === 3) ? 1500 : (seg < 3) ? Math.round(50 * SPEED) : randBetween(1200, 1700);
