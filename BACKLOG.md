@@ -15,11 +15,6 @@
 - [ ] OG-image — generera en riktig preview-bild
 - [ ] SPF-record — verifiera att mail inte hamnar i spam
 
-## Infrastruktur
-- [ ] Flytta DNS till Cloudflare (nameservers på Namecheap)
-- [ ] Koppla dry.design custom domain till Cloudflare Pages
-- [ ] Verifiera mail-deliverability efter DNS-flytt
-
 ## Done
 - [x] Minimal one-pager med typewriter-effekt (riktiga tangenttryckningar)
 - [x] Animerad SVG-logotyp med gradient color shifts
@@ -29,3 +24,5 @@
 - [x] Accessibility (sr-only, aria-hidden, prefers-reduced-motion)
 - [x] Auto-scroll till footer efter typewriter
 - [x] Deploy via Cloudflare Pages
+- [x] DNS på Cloudflare, custom domain kopplad
+- [x] Google Workspace mail (MX, DKIM, SPF)
